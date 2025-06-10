@@ -2598,7 +2598,7 @@ struct TaxiPathEntry
 
 struct TaxiPathNodeEntry
 {
-                                                            // 0 ID
+    uint32    ID;                                           // 0 ID
     uint32    PathId;                                       // 1
     uint32    NodeIndex;                                    // 2
     uint32    MapId;                                        // 3

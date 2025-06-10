@@ -42,7 +42,7 @@ class Transport : public GameObject, public TransportBase
 
         void Update(uint32 diff);
         void DelayedUpdate(uint32 diff);
-        void BuildUpdate(UpdateDataMapType& data_map);
+        void BuildUpdate(UpdateDataMapType& data_map, const uint32 diff);
 
         void AddPassenger(WorldObject* passenger);
         void RemovePassenger(WorldObject* passenger);

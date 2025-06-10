@@ -37,6 +37,10 @@
 #include <G3D/Box.h>
 #include <G3D/CoordinateFrame.h>
 
+#ifdef ELUNA
+#include "LuaEngine.h"
+#endif
+
 GameObject::GameObject() : WorldObject(false), MapObject(),
     m_model(NULL), m_goValue(), m_AI(NULL), _animKitId(0)
 {
@@ -146,6 +150,9 @@ void GameObject::AddToWorld()
     ///- Register the gameobject for guid lookup
     if (!IsInWorld())
     {
+#ifdef ELUNA
+        sEluna->OnAddToWorld(this);
+#endif
         if (m_zoneScript)
             m_zoneScript->OnGameObjectCreate(this);
 
@@ -168,6 +175,9 @@ void GameObject::RemoveFromWorld()
     ///- Remove the gameobject from the accessor
     if (IsInWorld())
     {
+#ifdef ELUNA
+        sEluna->OnRemoveFromWorld(this);
+#endif
         if (m_zoneScript)
             m_zoneScript->GameObjectRemoved(this);
 

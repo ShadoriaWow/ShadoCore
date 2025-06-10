@@ -1229,7 +1229,7 @@ bool Item::IsBindedNotWith(Player const* player) const
     return true;
 }
 
-void Item::BuildUpdate(UpdateDataMapType& data_map)
+void Item::BuildUpdate(UpdateDataMapType& data_map, const uint32 diff)
 {
     if (Player* owner = GetOwner())
         BuildFieldsUpdate(owner, data_map);

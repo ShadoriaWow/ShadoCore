@@ -91,6 +91,10 @@
 #include "LootLockoutMap.h"
 #include <ace/Stack_Trace.h>
 
+#ifdef ELUNA
+#include "LuaEngine.h"
+#endif
+
 #define ZONE_UPDATE_INTERVAL (1*IN_MILLISECONDS)
 
 enum CharacterFlags
@@ -5644,6 +5648,10 @@ void Player::ResurrectPlayer(float restore_percent, bool applySickness)
     UpdateObjectVisibility();
 
     UpdatePromotionAuras();
+
+#ifdef ELUNA
+    sEluna->OnResurrect(this);
+#endif
 
     if (!applySickness)
         return;
@@ -13143,6 +13151,13 @@ InventoryResult Player::CanUseItem(Item* pItem, bool not_loading) const
             return EQUIP_ERR_OK;
         }
     }
+
+#ifdef ELUNA
+    InventoryResult eres = sEluna->OnCanUseItem(this, pItem->GetEntry());
+    if (eres != EQUIP_ERR_OK)
+        return eres;
+#endif
+
     return EQUIP_ERR_ITEM_NOT_FOUND;
 }
 
@@ -13652,7 +13667,9 @@ Item* Player::EquipItem(uint16 pos, Item* pItem, bool update)
         pItem2->SetState(ITEM_CHANGED, this);
 
         ApplyEquipCooldown(pItem2);
-
+#ifdef ELUNA
+        sEluna->OnEquip(this, pItem2, bag, slot);
+#endif
         return pItem2;
     }
 
@@ -13662,6 +13679,9 @@ Item* Player::EquipItem(uint16 pos, Item* pItem, bool update)
 
     sLFGMgr->InitializeLockedDungeons(this);
 
+#ifdef ELUNA
+        sEluna->OnEquip(this, pItem, bag, slot);
+#endif
     return pItem;
 }
 
@@ -13719,6 +13739,10 @@ void Player::QuickEquipItem(uint16 pos, Item* pItem)
 
         UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_EQUIP_ITEM, pItem->GetEntry());
         UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_EQUIP_EPIC_ITEM, pItem->GetEntry(), slot);
+
+#ifdef ELUNA
+        sEluna->OnEquip(this, pItem, (pos >> 8), slot);
+#endif
     }
 }
 
@@ -28169,6 +28193,10 @@ void Player::StoreLootItem(uint8 lootSlot, Loot* loot, Object* src, AELootResult
         }
 
         sScriptMgr->OnItemPickup(this, newitem, sourceType, sourceId);
+
+#ifdef ELUNA
+        sEluna->OnLootItem(this, newitem, item->count, this->GetLootGUID());
+#endif
     }
     else
         SendEquipError(msg, NULL, NULL, item->itemid);
@@ -28610,6 +28638,11 @@ bool Player::LearnTalent(uint16 talentId)
     LearnSpell(spellid, false);
 
     TC_LOG_INFO("misc", "TalentID: %u Spell: %u Spec: %u\n", talentId, spellid, GetActiveSpec());
+
+
+#ifdef ELUNA
+    sEluna->OnLearnTalents(this, talentId, spellid);
+#endif
     return true;
 }
 

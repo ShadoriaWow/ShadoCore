@@ -34,6 +34,12 @@
 #include "AreaTrigger.h"
 #include "GameEventMgr.h"
 #include "ScriptedGossip.h"
+
+#ifdef ELUNA
+#include "LuaEngine.h"
+#include "ElunaUtility.h"
+#endif
+
 namespace
 {
     typedef std::set<ScriptObject*> ExampleScriptContainer;
@@ -1301,6 +1307,9 @@ void ScriptMgr::OnPlayerSpellCast(Player* player, Spell* spell, bool skipCheck)
 
 void ScriptMgr::OnPlayerLogin(Player* player)
 {
+#ifdef ELUNA
+    sEluna->OnLogin(player);
+#endif
     FOREACH_SCRIPT(PlayerScript)->OnLogin(player);
 }
 

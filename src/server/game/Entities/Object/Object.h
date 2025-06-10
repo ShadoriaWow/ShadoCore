@@ -139,6 +139,10 @@ class WorldObject;
 class WorldPacket;
 class ZoneScript;
 
+#ifdef ELUNA
+class ElunaEventProcessor;
+#endif
+
 typedef std::unordered_map<Player*, UpdateData> UpdateDataMapType;
 
 class Object
@@ -227,7 +231,7 @@ class Object
 
         virtual bool hasQuest(uint32 /* quest_id */) const { return false; }
         virtual bool hasInvolvedQuest(uint32 /* quest_id */) const { return false; }
-        virtual void BuildUpdate(UpdateDataMapType&) { }
+        virtual void BuildUpdate(UpdateDataMapType&, const uint32 diff) { }
         void BuildFieldsUpdate(Player*, UpdateDataMapType &) const;
 
         void SetFieldNotifyFlag(uint16 flag) { _fieldNotifyFlags |= flag; }
@@ -871,7 +875,7 @@ class WorldObject : public Object, public WorldLocation
         void DestroyForNearbyPlayers();
         virtual void UpdateObjectVisibility(bool forced = true);
         void UpdateStealthVisibility(uint32 diff);
-        void BuildUpdate(UpdateDataMapType&) override;
+        void BuildUpdate(UpdateDataMapType&, const uint32 diff) override;
 
         bool isActiveObject() const { return m_isActive; }
         void setActive(bool on, ActiveFlags flag = ActiveFlags::InCombat);
@@ -917,6 +921,10 @@ class WorldObject : public Object, public WorldLocation
         virtual float GetStationaryY() const { return GetPositionY(); }
         virtual float GetStationaryZ() const { return GetPositionZ(); }
         virtual float GetStationaryO() const { return GetOrientation(); }
+
+#ifdef ELUNA
+        ElunaEventProcessor* elunaEvents;
+#endif
 
         virtual uint16 GetAIAnimKitId() const { return 0; }
         virtual uint16 GetMovementAnimKitId() const { return 0; }

@@ -1100,7 +1100,7 @@ void Transport::DoEventIfAny(KeyFrame const& node, bool departure)
     }
 }
 
-void Transport::BuildUpdate(UpdateDataMapType& data_map)
+void Transport::BuildUpdate(UpdateDataMapType& data_map, const uint32 diff)
 {
     Map::PlayerList const& players = GetMap()->GetPlayers();
     if (players.isEmpty())

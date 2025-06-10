@@ -728,7 +728,7 @@ void Map::Update(const uint32 t_diff)
     UpdateDataMapType updatePlayers;
 
     for (auto&& obj : m_updatable)
-        obj->BuildUpdate(updatePlayers);
+        obj->BuildUpdate(updatePlayers, t_diff);
 
     m_updatable.clear();
 

@@ -42,3 +42,7 @@ endif()
 if(TOOLS)
   add_subdirectory(StormLib)
 endif()
+
+if (ELUNA)
+  add_subdirectory(lualib)
+endif()

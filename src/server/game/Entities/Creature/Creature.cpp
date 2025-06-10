@@ -56,6 +56,10 @@
 #include "Transport.h"
 #include "ace/Stack_Trace.h"
 
+#ifdef ELUNA
+#include "LuaEngine.h"
+#endif
+
 TrainerSpell const* TrainerSpellData::Find(uint32 spell_id) const
 {
     TrainerSpellMap::const_iterator itr = spellList.find(spell_id);
@@ -185,6 +189,9 @@ void Creature::AddToWorld()
     ///- Register the creature for guid lookup
     if (!IsInWorld())
     {
+#ifdef ELUNA
+        sEluna->OnAddToWorld(this);
+#endif
         if (m_zoneScript)
             m_zoneScript->OnCreatureCreate(this);
         sObjectAccessor->AddObject(this);
@@ -204,6 +211,9 @@ void Creature::RemoveFromWorld()
 {
     if (IsInWorld())
     {
+#ifdef ELUNA
+        sEluna->OnRemoveFromWorld(this);
+#endif
         if (m_zoneScript)
             m_zoneScript->OnCreatureRemove(this);
         if (m_formation)
